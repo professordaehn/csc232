@@ -8,6 +8,7 @@
  *          Timothy M. Henry <thenry@neit.edu>
  */
 
+#include <cstdlib>
 #include <iostream>
 
 using length_unit = double;
@@ -41,5 +42,5 @@ int main() {
               << radius << " inches is " << volume
               << " cubic inches.\n";
 
-    return 0;
+    return EXIT_SUCCESS;
 } // end program
