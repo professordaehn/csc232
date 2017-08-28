@@ -38,7 +38,7 @@ length_unit getRadius(const std::string& prompt, std::string& units);
  * @param volume the volume of the sphere, passed by value
  * @param units the units of measure for the other parameters, passed by value
  */
-void displayData(length_unit radius, volume_unit volume, std::string units);
+void displayData(length_unit radius, volume_unit volume, const std::string& units);
 
 // An example of a global variable
 const std::string UNITS_PROMPT = "What units were used for this measurement? ";
@@ -93,7 +93,7 @@ length_unit getRadius(const std::string& prompt, std::string& units) {
     return radius;
 }
 
-void displayData(length_unit radius, volume_unit volume, std::string units) {
+void displayData(length_unit radius, volume_unit volume, const std::string& units) {
     std::cout << std::showpoint;
     std::cout << "The volume of a sphere of radius "
               // Notice that precision has to do with the number of
