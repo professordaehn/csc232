@@ -8,6 +8,10 @@
  *          Timothy M. Henry <thenry@neit.edu>
  */
 
+#define FALSE 0
+#define TRUE 1
+#define PRODUCTION FALSE
+
 #include <cstdlib>
 #include <iostream>
 
@@ -31,8 +35,13 @@ int main() {
     // (See above, following the #include)
     length_unit radius;
 
+// Demonstrate the use of preprocessor directives
+#if PRODUCTION
     std::cout << "Enter the radius of the sphere: ";
     std::cin >> radius;
+#else
+    radius = 5;
+#endif
 
     // Similarly here, instead of using typedef we use the
     // using statement from above to declare volume_unit as
