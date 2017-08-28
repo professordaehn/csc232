@@ -21,11 +21,21 @@ using volumne_unit = double;
 int main() {
     // Compute the volume of a sphere of a given radius
     const double PI{3.14159};
+
+    // Instead of using a typedef statement like:
+    //
+    // typedef double length_unit;
+    //
+    // we'll use the modern equivalent with using statements
+    // (See above, following the #include)
     length_unit radius;
 
     std::cout << "Enter the radius of the sphere: ";
     std::cin >> radius;
 
+    // Similarly here, instead of using typedef we use the
+    // using statement from above to declare volume_unit as
+    // a "new" type that is equivalent to double
     volumne_unit volume{4 * PI * radius * radius * radius / 3};
     std::cout << "The volume of a sphere of radius "
               << radius << " inches is " << volume
