@@ -8,28 +8,50 @@
  *          Timothy M. Henry <thenry@neit.edu>
  */
 
-#define FALSE 0
-#define TRUE 1
-#define PRODUCTION TRUE
-
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
 
 using length_unit = double;
 using volume_unit = double;
-
-/* Forward function declarations */
+using menu_choice = char;
 
 /**
- * Obtain a radius measurement from the user, along with the units of measure.
- *
- * @param prompt the prompt to provide the user for the radius, passed by const reference
- * @param units the units of measure associated with the returned radius, passed by reference
- * @return The radius as entered by the user is explicitly returned as well as the units
- *         of measure that are implicitly returned by reference.
+ * An enumeration of menu choices.
  */
-length_unit getRadius(const std::string& prompt, std::string& units);
+enum class MenuItem : menu_choice {ENTER_RADIUS = '1', ENTER_UNITS, DISPLAY_DATA, QUIT};
+
+/**
+ * Read the radius from the user with the given prompt.
+ * @param prompt the prompt used to solicit the radius from the end user
+ * @return The radius read from standard input is returned.
+ */
+length_unit getRadius(const std::string& prompt);
+
+/**
+ * Read the units of measure associated with the radius with the given prompt.
+ * @param prompt the prompt used to solicit the radius from the end user
+ * @return The units of measure read from standard input is returned.
+ */
+std::string getUnits(const std::string& prompt);
+
+/**
+ * Calculate the volume of a sphere with given radius.
+ * @param radius the radius of the sphere
+ * @return The volume for a sphere of the given radius is returned.
+ */
+volume_unit calculateVolume(const length_unit& radius);
+
+/**
+ * Display a menu header that includes a welcome message and instructions.
+ */
+void displayHeader();
+
+/**
+ * Display a set of menu items and return the menu item selected by the end user.
+ * @return The menu choice selected by the end user is returned.
+ */
+MenuItem displayMenu();
 
 /**
  * Display the calculated data.
@@ -40,8 +62,12 @@ length_unit getRadius(const std::string& prompt, std::string& units);
  */
 void displayData(length_unit radius, volume_unit volume, const std::string& units);
 
-// An example of a global variable
-const std::string UNITS_PROMPT = "What units were used for this measurement? ";
+// Static, global variables
+static const std::string RADIUS_PROMPT = "Enter radius: ";
+static const std::string UNITS_PROMPT = "What units were used for this measurement? ";
+static const length_unit UNIT_RADIUS{1.0};
+static const std::string DEFAULT_UNITS{"cm"};
+static const double PI{3.14159};
 
 /**
  * @brief Entry point for this application.
@@ -50,50 +76,73 @@ const std::string UNITS_PROMPT = "What units were used for this measurement? ";
  */
 int main() {
     // Compute the volume of a sphere of a given radius
-    const double PI{3.14159};
-    const std::string RADIUS_PROMPT = "Enter the radius of the sphere: ";
+    length_unit radius{UNIT_RADIUS};
+    std::string units{DEFAULT_UNITS};
 
-    // Instead of using a typedef statement like:
-    //
-    // typedef double length_unit;
-    //
-    // we'll use the modern equivalent with using statements
-    // (See above, following the #include)
-    length_unit radius;
-    std::string units;
-
-// Demonstrate the use of preprocessor directives
-#if PRODUCTION
-    // radius is returned explicitly; units is returned implicitly via a reference parameter
-    radius = getRadius(RADIUS_PROMPT, units);
-#else
-    // Since here we are not prompting for the values obtained
-    // by getRadius(), we must explicitly set the variables obtained
-    // by that function here:
-    radius = 5;
-    units = "inches";
-#endif
-
-    // Similarly here, instead of using typedef we use the
-    // using statement from above to declare volume_unit as
-    // a "new" type that is equivalent to double
-    volume_unit volume{4 * PI * radius * radius * radius / 3};
-    std::cout << std::showpoint;
-    displayData(radius, volume, units);
+    displayHeader();
+    MenuItem selection{MenuItem::QUIT};
+    do {
+        selection = displayMenu();
+        switch(selection) {
+            case MenuItem::ENTER_RADIUS:
+                radius = getRadius(RADIUS_PROMPT);
+                break;
+            case MenuItem::ENTER_UNITS:
+                units = getUnits(UNITS_PROMPT);
+                break;
+            case MenuItem::DISPLAY_DATA:
+                displayData(radius, calculateVolume(radius), units);
+                break;
+            case MenuItem::QUIT:
+                std::cout << "Thanks for playing!" << std::endl;
+                break;
+            default:
+                std::cout << "I don't know what to do.." << std::endl;
+                std::cout << "Please try again." << std::endl;
+        }
+    } while (selection != MenuItem::QUIT);
 
     return EXIT_SUCCESS;
 } // end program
 
-length_unit getRadius(const std::string& prompt, std::string& units) {
-    length_unit radius;
+length_unit getRadius(const std::string& prompt) {
+    length_unit radius{UNIT_RADIUS};
     std::cout << prompt;
     std::cin >> radius;
-    std::cout << UNITS_PROMPT;
-    std::cin >> units;
     return radius;
 }
 
+std::string getUnits(const std::string& prompt) {
+    std::string units{DEFAULT_UNITS};
+    std::cout << prompt;
+    std::cin >> units;
+    return units;
+}
+
+volume_unit calculateVolume(const length_unit& radius) {
+    return 4 * PI * radius * radius * radius / 3;
+}
+
+
+void displayHeader() {
+    std::cout << "Welcome to the voluminator!\nPlease select a menu item by typing the "
+              << "number of the menu item followed by the [ENTER] key...\n"
+              << std::endl;
+}
+
+MenuItem displayMenu() {
+    char input;
+    std::cout << "[" << static_cast<menu_choice>(MenuItem::ENTER_RADIUS) << "]" << " Enter/Change radius.\n";
+    std::cout << "[" << static_cast<menu_choice>(MenuItem::ENTER_UNITS) << "]" << " Enter/Change units.\n";
+    std::cout << "[" << static_cast<menu_choice>(MenuItem::DISPLAY_DATA) << "]" << " Display data.\n";
+    std::cout << "[" << static_cast<menu_choice>(MenuItem::QUIT) << "]" << " Quit.\n\n";
+    std::cout << "Your selection: ";
+    std::cin >> input;
+    return static_cast<MenuItem>(input);
+}
+
 void displayData(length_unit radius, volume_unit volume, const std::string& units) {
+    std::cout << std::endl;
     std::cout << std::showpoint;
     std::cout << "The volume of a sphere of radius "
               // Notice that precision has to do with the number of
@@ -102,4 +151,5 @@ void displayData(length_unit radius, volume_unit volume, const std::string& unit
               << std::setprecision(2) << radius << " " << units << " is "
               << std::setprecision(4) << volume
               << " cubic " << units << ".\n";
+    std::cout << std::endl;
 }
