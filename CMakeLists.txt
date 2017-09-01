@@ -46,11 +46,13 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(SRC_MAIN_FILES src/main/cpp/Main.cpp)
 set(SRC_DEMO_FILES src/main/cpp/Demo.cpp)
+set(SRC_CONTAINER_FILES src/main/cpp/Containers.cpp)
 set(SRC_TEST_FILES src/test/cpp/UnitTestRunner.cpp)
 
 add_executable(lectures ${SRC_MAIN_FILES})
 add_executable(lecturesDemo ${SRC_DEMO_FILES})
 add_executable(lecturesTest ${SRC_TEST_FILES})
+add_executable(containers ${SRC_CONTAINER_FILES})
 
 if (APPLE)
     include_directories(lecturesTest PUBLIC /usr/local/include)
