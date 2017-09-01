@@ -2,10 +2,8 @@
  * CSC232 - Data Structures with C++
  * Missouri State University, Fall 2017
  *
- * @file    Demo.cpp
- * @authors Jim Daehn <jdaehn@missouristate.edu>
- *          Frank M. Carrano <carrano@acm.org>
- *          Timothy M. Henry <thenry@neit.edu>
+ * @file    Containers.cpp
+ * @author Jim Daehn <jdaehn@missouristate.edu>
  */
 
 #include <array>
